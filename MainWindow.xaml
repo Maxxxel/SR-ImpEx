@@ -4,9 +4,134 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SR_ImpEx"
+        xmlns:log="clr-namespace:SR_ImpEx.LogViewer" 
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Window.Resources>
+        <Style TargetType="ItemsControl" x:Key="LogViewerStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <ScrollViewer CanContentScroll="True">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate DataType="{x:Type log:LogEntry}">
+            <Grid IsSharedSizeScope="True">
+                <Grid.ColumnDefinitions>
+                    <!--<ColumnDefinition SharedSizeGroup="Index" Width="Auto"/>-->
+                    <ColumnDefinition SharedSizeGroup="Date" Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding DateTime}" Grid.Column="0"
+                       FontWeight="Bold" Margin="5,0,5,0"/>
+
+                <!--<TextBlock Text="{Binding Index}" Grid.Column="1" FontWeight="Bold" Margin="0,0,2,0" />-->
+
+                <TextBlock Text="{Binding Message}" Grid.Column="2"
+                       TextWrapping="Wrap"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type log:CollapsibleLogEntry}">
+            <Grid IsSharedSizeScope="True">
+                <Grid.ColumnDefinitions>
+                    <!--<ColumnDefinition SharedSizeGroup="Index" Width="Auto"/>-->
+                    <ColumnDefinition SharedSizeGroup="Date" Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="{Binding DateTime}" Grid.Column="0"
+                       FontWeight="Bold" Margin="5,0,5,0"/>
+
+                <!--<TextBlock Text="{Binding Index}" Grid.Column="1" FontWeight="Bold" Margin="0,0,2,0" />-->
+
+                <TextBlock Text="{Binding Message}" Grid.Column="2"
+                       TextWrapping="Wrap"/>
+
+                <ToggleButton x:Name="Expander" Grid.Row="1" Grid.Column="0"
+                          VerticalAlignment="Top" Content="+" HorizontalAlignment="Right"/>
+
+                <ItemsControl ItemsSource="{Binding Contents}" Style="{StaticResource LogViewerStyle}"
+                          Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                          x:Name="Contents" Visibility="Collapsed"/>
+
+            </Grid>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="Expander" Property="IsChecked" Value="True">
+                    <Setter TargetName="Contents" Property="Visibility" Value="Visible"/>
+                    <Setter TargetName="Expander" Property="Content" Value="-"/>
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </Window.Resources>
+    
+    <DockPanel>
+        <Grid Height="400">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
         
-    </Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0" Margin="5,0,0,5" Content="Import File" Click="ImportFile" />
+            <Button Grid.Row="1" Grid.Column="0" Margin="5,0,0,5" Content="Export File" Click="ExportFile" />
+            <Button Grid.Row="2" Grid.Column="0" Margin="5,0,0,5" Content="Open Export Folder" Click="OpenExportFolder" />
+
+            <Label Grid.Row="3" Grid.Column="0" Content="Name:"/>
+            <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" x:Name="Model_Name" />
+
+            <Label Grid.Row="4" Grid.Column="0" Content="Triangles"/>
+            <TextBox Grid.Row="4" Grid.Column="1" IsReadOnly="True" x:Name="Triangle_Count"/>
+
+            <Label Grid.Row="5" Grid.Column="0" Content="Has Skeleton"/>
+            <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="True" x:Name="Has_Skeleton"/>
+
+            <Label Grid.Row="6" Grid.Column="0" Content="Animation Count:"/>
+            <TextBox Grid.Row="6" Grid.Column="1" IsReadOnly="True" x:Name="Animation_Count"/>
+        </Grid>
+
+        <ItemsControl ItemsSource="{Binding}" Style="{StaticResource LogViewerStyle}" DockPanel.Dock="Bottom" Margin="10,0,10,10" Foreground="Black">
+            <ItemsControl.Template>
+                <ControlTemplate>
+                    <ScrollViewer CanContentScroll="True" ScrollChanged="ScrollViewer_ScrollChanged">
+                        <ItemsPresenter/>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel IsItemsHost="True"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </DockPanel>
 </Window>

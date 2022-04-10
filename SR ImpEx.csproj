@@ -35,8 +35,46 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Pfim, Version=0.10.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Pfim.0.10.3\lib\netstandard2.0\Pfim.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpGLTF.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6f8b67557d279fe6, processorArchitecture=MSIL">
+      <HintPath>packages\SharpGLTF.Core.1.0.0-alpha0025\lib\netstandard2.0\SharpGLTF.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpGLTF.Toolkit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6f8b67557d279fe6, processorArchitecture=MSIL">
+      <HintPath>packages\SharpGLTF.Toolkit.1.0.0-alpha0025\lib\netstandard2.0\SharpGLTF.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Encodings.Web.5.0.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=5.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Json.5.0.2\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,6 +93,51 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\AnimationFinder.cs" />
+    <Compile Include="Helpers\Exporter.cs" />
+    <Compile Include="LogViewer\LogEntry.cs" />
+    <Compile Include="LogViewer\PropertyChangedBase.cs" />
+    <Compile Include="Structures\DRSFile\AnimationMarker.cs" />
+    <Compile Include="Structures\DRSFile\AnimationMarkerSet.cs" />
+    <Compile Include="Structures\DRSFile\AnimationSet.cs" />
+    <Compile Include="Structures\DRSFile\AnimationSetVariant.cs" />
+    <Compile Include="Structures\DRSFile\Bone.cs" />
+    <Compile Include="Structures\DRSFile\BoneMatrix.cs" />
+    <Compile Include="Structures\DRSFile\BoneVertex.cs" />
+    <Compile Include="Structures\DRSFile\BoneWeight.cs" />
+    <Compile Include="Structures\DRSFile\CGeoMesh.cs" />
+    <Compile Include="Structures\DRSFile\Constraint.cs" />
+    <Compile Include="Structures\DRSFile\CSkSkeleton.cs" />
+    <Compile Include="Structures\DRSFile\CSkSkinInfo.cs" />
+    <Compile Include="Structures\DRSFile\DRS.cs" />
+    <Compile Include="Helpers\ImageConverter.cs" />
+    <Compile Include="Helpers\FileWrapper.cs" />
+    <Compile Include="Structures\DRSFile\BattleforgeMesh.cs" />
+    <Compile Include="Structures\DRSFile\BattleforgeSubMesh.cs" />
+    <Compile Include="Structures\DRSFile\CDspMeshFile.cs" />
+    <Compile Include="Structures\DRSFile\EmptyString.cs" />
+    <Compile Include="Structures\DRSFile\Flow.cs" />
+    <Compile Include="Structures\DRSFile\IKAtlas.cs" />
+    <Compile Include="Structures\DRSFile\LevelOfDetail.cs" />
+    <Compile Include="Structures\DRSFile\Material.cs" />
+    <Compile Include="Structures\DRSFile\ModeAnimationKey.cs" />
+    <Compile Include="Structures\DRSFile\NodeInformation.cs" />
+    <Compile Include="Structures\DRSFile\Refraction.cs" />
+    <Compile Include="Structures\DRSFile\UnknownStructure.cs" />
+    <Compile Include="Structures\DRSFile\UnknownStructure2.cs" />
+    <Compile Include="Structures\DRSFile\UnknownStructure3.cs" />
+    <Compile Include="Structures\DRSFile\VertexWeight.cs" />
+    <Compile Include="Structures\GLTFFile\GLTFSkeleton.cs" />
+    <Compile Include="Helpers\MathHelpers.cs" />
+    <Compile Include="Structures\GLTFFile\SkinnedMesh.cs" />
+    <Compile Include="Structures\GLTFFile\StaticMesh.cs" />
+    <Compile Include="Structures\DRSFile\Texture.cs" />
+    <Compile Include="Structures\DRSFile\Textures.cs" />
+    <Compile Include="Structures\DRSFile\Triangle.cs" />
+    <Compile Include="Structures\DRSFile\Vertex.cs" />
+    <Compile Include="Structures\SKAFile\Header.cs" />
+    <Compile Include="Structures\SKAFile\Keyframe.cs" />
+    <Compile Include="Structures\SKAFile\SKA.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -86,6 +169,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -94,5 +178,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
