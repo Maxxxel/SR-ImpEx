@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace SR_ImpEx.LogViewer
+namespace SR_ImpEx.Logger
 {
     public class PropertyChangedBase : INotifyPropertyChanged
     {

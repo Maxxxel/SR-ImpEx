@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SR_ImpEx"
-        xmlns:log="clr-namespace:SR_ImpEx.LogViewer" 
+        xmlns:logger="clr-namespace:SR_ImpEx.Logger"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
     <Window.Resources>
         <Style TargetType="ItemsControl" x:Key="LogViewerStyle">
             <Setter Property="Template">
@@ -28,7 +29,7 @@
             </Setter>
         </Style>
 
-        <DataTemplate DataType="{x:Type log:LogEntry}">
+        <DataTemplate DataType="{x:Type logger:LogEntry}">
             <Grid IsSharedSizeScope="True">
                 <Grid.ColumnDefinitions>
                     <!--<ColumnDefinition SharedSizeGroup="Index" Width="Auto"/>-->
@@ -46,7 +47,7 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type log:CollapsibleLogEntry}">
+        <DataTemplate DataType="{x:Type logger:CollapsibleLogEntry}">
             <Grid IsSharedSizeScope="True">
                 <Grid.ColumnDefinitions>
                     <!--<ColumnDefinition SharedSizeGroup="Index" Width="Auto"/>-->
@@ -83,7 +84,7 @@
             </DataTemplate.Triggers>
         </DataTemplate>
     </Window.Resources>
-    
+
     <DockPanel>
         <Grid Height="400">
             <Grid.RowDefinitions>
@@ -96,7 +97,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-        
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="150" />
@@ -108,15 +109,6 @@
 
             <Label Grid.Row="3" Grid.Column="0" Content="Name:"/>
             <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" x:Name="Model_Name" />
-
-            <Label Grid.Row="4" Grid.Column="0" Content="Triangles"/>
-            <TextBox Grid.Row="4" Grid.Column="1" IsReadOnly="True" x:Name="Triangle_Count"/>
-
-            <Label Grid.Row="5" Grid.Column="0" Content="Has Skeleton"/>
-            <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="True" x:Name="Has_Skeleton"/>
-
-            <Label Grid.Row="6" Grid.Column="0" Content="Animation Count:"/>
-            <TextBox Grid.Row="6" Grid.Column="1" IsReadOnly="True" x:Name="Animation_Count"/>
         </Grid>
 
         <ItemsControl ItemsSource="{Binding}" Style="{StaticResource LogViewerStyle}" DockPanel.Dock="Bottom" Margin="10,0,10,10" Foreground="Black">

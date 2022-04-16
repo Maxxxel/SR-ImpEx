@@ -1,5 +1,4 @@
 ﻿using SharpGLTF.Scenes;
-using SR_ImpEx.Structures;
 using SR_ImpEx.Structures.DRSFile;
 using System;
 using System.Linq;
