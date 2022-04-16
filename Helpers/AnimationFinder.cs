@@ -1,6 +1,11 @@
-﻿using SR_ImpEx.Structures;
+﻿using SharpGLTF.Schema2;
+using SR_ImpEx.Structures;
 using SR_ImpEx.Structures.DRSFile;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SR_ImpEx.Helpers
 {

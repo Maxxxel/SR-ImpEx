@@ -2,6 +2,7 @@
 using SharpGLTF.Geometry.VertexTypes;
 using SharpGLTF.Materials;
 using SharpGLTF.Scenes;
+using SR_ImpEx.Structures;
 using SR_ImpEx.Helpers;
 using SR_ImpEx.Structures.DRSFile;
 using SR_ImpEx.Structures.SKAFile;
@@ -10,6 +11,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SR_ImpEx.Structures.GLTFFile
 {
@@ -75,7 +78,7 @@ namespace SR_ImpEx.Structures.GLTFFile
                 Texture ColorMap = cDspMeshFile.Meshes[s].Textures.Texture.Where(tx => tx.Name.Contains("_col")).Single();
                 Texture NormalMap = cDspMeshFile.Meshes[s].Textures.Texture.Where(tx => tx.Name.Contains("_nor")).Single();
 
-                string CurrentPath = AppContext.BaseDirectory;
+                string CurrentPath = Directory.GetCurrentDirectory();
                 if (!Directory.Exists(Path.Combine(CurrentPath, "GLTF_Exports"))) Directory.CreateDirectory(Path.Combine(CurrentPath, "GLTF_Exports"));
 
                 if (ColorMap != null)

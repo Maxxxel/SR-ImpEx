@@ -1,9 +1,4 @@
-﻿using SharpGLTF.Geometry;
-using SharpGLTF.Geometry.VertexTypes;
-using SharpGLTF.Materials;
-using SR_ImpEx.Helpers;
-using System;
-using System.IO;
+﻿using SR_ImpEx.Helpers;
 
 namespace SR_ImpEx.Structures
 {
@@ -18,31 +13,6 @@ namespace SR_ImpEx.Structures
             if (Length == 1)
             {
                 LODLevel = file.ReadInt();
-            }
-        }
-
-        public LevelOfDetail(PrimitiveBuilder<MaterialBuilder, VertexPositionNormal, VertexTexture1, VertexEmpty> p)
-        {
-            Length = 0; // WIP
-
-            if (Length == 1)
-            {
-                LODLevel = 1; // We need to find out what it changes ingame
-            }
-        }
-
-        internal int Size()
-        {
-            return 4 + (Length * 4);
-        }
-
-        internal void Write(BinaryWriter bw)
-        {
-            bw.Write(Length);
-
-            if (Length == 1)
-            {
-                bw.Write(LODLevel);
             }
         }
     }

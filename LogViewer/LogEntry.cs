@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SR_ImpEx.Logger
+namespace SR_ImpEx.LogViewer
 {
     public class LogEntry : PropertyChangedBase
     {
         public string DateTime { get; set; }
-
         public int Index { get; set; }
-
         public string Message { get; set; }
     }
 
