@@ -1,9 +1,8 @@
 ﻿using SR_ImpEx.Helpers;
-using SR_ImpEx.Structures;
 using SR_ImpEx.Structures.DRSFile;
-using System.Collections.Generic;
+using SR_ImpEx.Structures.GLTFFile;
+using System;
 using System.IO;
-using System.Numerics;
 
 namespace SR_ImpEx.Structures
 {
@@ -21,10 +20,31 @@ namespace SR_ImpEx.Structures
         public NodeInformation CSkSkinInfoFileNodeInformation { get; }
         public NodeInformation CSkSkeletonFileNodeInformation { get; }
         public CDspMeshFile CDspMeshFile { get; internal set; }
-        public CGeoMesh CGeoMesh { get; private set; }
+        public CGeoMesh CGeoMesh { get; internal set; }
+        public CGeoOBBTree CGeoOBBTree { get; internal set; }
         public CSkSkinInfo CSkSkinInfo { get; private set; }
         public CSkSkeleton CSkSkeleton { get; private set; }
         public AnimationSet AnimationSet { get; }
+        public CDspJointMap CDspJointMap { get; internal set; }
+        public DrwResourceMeta DrwResourceMeta { get; internal set; }
+        public CGeoPrimitiveContainer CGeoPrimitiveContainer { get; internal set; }
+        public CollisionShape CollisionShape { get; internal set; }
+        public RootNode RootNode { get; internal set; }
+        public Node CGeoMeshNode { get; internal set; }
+        public Node CGeoOBBTreeNode { get; internal set; }
+        public Node JointMapNode { get; internal set; }
+        public Node MeshNode { get; internal set; }
+        public Node DrwResourceMetaNode { get; internal set; }
+        public Node CGeoPrimitiveContainerNode { get; internal set; }
+        public Node CollisionShapeNode { get; internal set; }
+        public RootNodeInformation RootNodeInformation { get; internal set; }
+        public NodeInformation CGeoMeshInformation { get; internal set; }
+        public NodeInformation CGeoOBBTreeInformation { get; internal set; }
+        public NodeInformation JointNodeInformation { get; internal set; }
+        public NodeInformation MeshNodeInformation { get; internal set; }
+        public NodeInformation DrwResourceMetaInformation { get; internal set; }
+        public NodeInformation CollisionShapeInformation { get; internal set; }
+        public NodeInformation CGeoPrimitiveContainerInformation { get; internal set; }
         public DRS(FileWrapper File)
         {
             Magic = File.ReadInt();
@@ -105,6 +125,131 @@ namespace SR_ImpEx.Structures
             {
                 // Unsupported Magic
             }
+        }
+        public DRS(GLTF gltf)
+        {
+            Magic = -981667554;
+            NumberOfModels = 1;
+            NodeHierarchyOffset = 20;
+            NodeCount = 1;
+
+            CGeoMesh = new CGeoMesh(gltf); NodeCount++;
+            CGeoOBBTree = new CGeoOBBTree(gltf); NodeCount++;
+            CDspJointMap = new CDspJointMap(gltf); NodeCount++;
+            CDspMeshFile = new CDspMeshFile(gltf); NodeCount++;
+            DrwResourceMeta = new DrwResourceMeta(gltf); NodeCount++;
+
+            if (gltf.SkinnedModel)
+            {
+                // WIP
+            }
+            else if (gltf.CollisionShaped)
+            {
+                CGeoPrimitiveContainer = new CGeoPrimitiveContainer(gltf); NodeCount++;
+                CollisionShape = new CollisionShape(gltf); NodeCount++;
+            }
+
+            // We need to get the Sizes of our Classes now
+            int GeoSize = CGeoMesh.Size(); MainWindow.LogMessage($"[DEBUG] Geo Size {GeoSize}");
+            int OBBSize = CGeoOBBTree.Size(); MainWindow.LogMessage($"[DEBUG] OBBSize {OBBSize}");
+            int JointSize = CDspJointMap.Size(); MainWindow.LogMessage($"[DEBUG] JointSize {JointSize}");
+            int MeshSize = CDspMeshFile.Size(); MainWindow.LogMessage($"[DEBUG] MeshSize {MeshSize}");
+            int DrwResSize = DrwResourceMeta.Size(); MainWindow.LogMessage($"[DEBUG] DrwResSize {DrwResSize}");
+            int PrimitiveSize = 0;
+            int CollisionSize = 0;
+
+            if (gltf.SkinnedModel)
+            {
+                // WIP
+            }
+            else if (gltf.CollisionShaped)
+            {
+                PrimitiveSize = CGeoPrimitiveContainer.Size();
+                CollisionSize = CollisionShape.Size();
+            }
+
+            int InfoIndex = 0;
+            int InformationOffset = 20;
+
+            RootNode = new RootNode(); InformationOffset += RootNode.Size(); InfoIndex++;
+
+            int GeoIndex = InfoIndex;
+            CGeoMeshNode = new Node("CGeoMesh", InfoIndex); InformationOffset += CGeoMeshNode.Size(); InfoIndex++;
+            int OBBIndex = InfoIndex;
+            CGeoOBBTreeNode = new Node("CGeoOBBTree", InfoIndex); InformationOffset += CGeoOBBTreeNode.Size(); InfoIndex++;
+            int JointIndex = InfoIndex;
+            JointMapNode = new Node("CDspJointMap", InfoIndex); InformationOffset += JointMapNode.Size(); InfoIndex++;
+            int MeshIndex = InfoIndex;
+            MeshNode = new Node("CDspMeshFile", InfoIndex); InformationOffset += MeshNode.Size(); InfoIndex++;
+            int DrwResIndex = InfoIndex;
+            DrwResourceMetaNode = new Node("DrwResourceMeta", InfoIndex); InformationOffset += DrwResourceMetaNode.Size(); InfoIndex++;
+
+            int CollisionIndex = 0;
+            int PrimitiveIndex = 0;
+
+            if (gltf.SkinnedModel)
+            {
+                // WIP
+            }
+            else if (gltf.CollisionShaped)
+            {
+                PrimitiveIndex = InfoIndex;
+                CGeoPrimitiveContainerNode = new Node("CGeoPrimitiveContainer", InfoIndex); InformationOffset += CGeoPrimitiveContainerNode.Size(); InfoIndex++;
+                CollisionIndex = InfoIndex;
+                CollisionShapeNode = new Node("collisionShape", InfoIndex); InformationOffset += CollisionShapeNode.Size(); InfoIndex++;
+            }
+
+            int DataOffset = InformationOffset + (NodeCount - 1) * 32;
+            RootNodeInformation = new RootNodeInformation(NodeCount - 1);
+            CGeoMeshInformation = new NodeInformation("CGeoMesh", GeoIndex, DataOffset, GeoSize); DataOffset += GeoSize;
+            CGeoOBBTreeInformation = new NodeInformation("CGeoOBBTree", OBBIndex, DataOffset, OBBSize); DataOffset += OBBSize;
+            JointNodeInformation = new NodeInformation("CDspJointMap", JointIndex, DataOffset, JointSize); DataOffset += JointSize;
+            MeshNodeInformation = new NodeInformation("CDspMeshFile", MeshIndex, DataOffset, MeshSize); DataOffset += MeshSize;
+            DrwResourceMetaInformation = new NodeInformation("DrwResourceMeta", DrwResIndex, DataOffset, DrwResSize); DataOffset += DrwResSize;
+
+            if (gltf.CollisionShaped)
+            {
+                CGeoPrimitiveContainerInformation = new NodeInformation("CGeoPrimitiveContainer", PrimitiveIndex, DataOffset, PrimitiveSize); DataOffset += PrimitiveSize;
+                CollisionShapeInformation = new NodeInformation("collisionShape", CollisionIndex, DataOffset, CollisionSize); DataOffset += CollisionSize;
+            }
+
+            // Update at last
+            NodeInformationOffset = InformationOffset;
+        }
+        internal void Write(BinaryWriter bw)
+        {
+            // Write Header
+            bw.Write(Magic);
+            bw.Write(NumberOfModels);
+            bw.Write(NodeInformationOffset);
+            bw.Write(NodeHierarchyOffset);
+            bw.Write(NodeCount);
+            // Write Node Hierarchy
+            RootNode.Write(bw);
+            CGeoMeshNode.Write(bw);
+            CGeoOBBTreeNode.Write(bw);
+            JointMapNode.Write(bw);
+            MeshNode.Write(bw);
+            DrwResourceMetaNode.Write(bw);
+            if (CGeoPrimitiveContainerNode != null) CGeoPrimitiveContainerNode.Write(bw);
+            if (CollisionShapeNode != null) CollisionShapeNode.Write(bw);
+            // Write Node Information
+            RootNodeInformation.Write(bw); // Reads First, then NodeInformation(s)
+            CGeoMeshInformation.Write(bw);
+            CGeoOBBTreeInformation.Write(bw);
+            JointNodeInformation.Write(bw);
+            MeshNodeInformation.Write(bw);
+            DrwResourceMetaInformation.Write(bw);
+            if (CGeoPrimitiveContainerInformation != null) CGeoPrimitiveContainerInformation.Write(bw);
+            if (CollisionShapeInformation != null) CollisionShapeInformation.Write(bw);
+            // Node Data
+            CGeoMesh.Write(bw);
+            CGeoOBBTree.Write(bw);
+            CDspJointMap.Write(bw);
+            CDspMeshFile.Write(bw);
+            DrwResourceMeta.Write(bw);
+            if (CGeoPrimitiveContainer != null) CGeoPrimitiveContainer.Write(bw);
+            if (CollisionShape != null) CollisionShape.Write(bw);
         }
     }
 }

@@ -10,6 +10,8 @@ namespace SR_ImpEx.Helpers
     {
         public static void DDSToPNG(string sourcePath, string targetPath)
         {
+            if (!sourcePath.Contains(".dds")) sourcePath += ".dds";
+
             var image = Pfim.Pfim.FromFile(sourcePath);
 
             PixelFormat format;

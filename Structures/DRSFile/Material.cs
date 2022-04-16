@@ -1,4 +1,9 @@
-﻿using SR_ImpEx.Helpers;
+﻿using SharpGLTF.Geometry;
+using SharpGLTF.Geometry.VertexTypes;
+using SharpGLTF.Materials;
+using SR_ImpEx.Helpers;
+using System;
+using System.IO;
 
 namespace SR_ImpEx.Structures
 {
@@ -70,6 +75,26 @@ namespace SR_ImpEx.Structures
                         break;
                 }
             }
+        }
+
+        public Material(PrimitiveBuilder<MaterialBuilder, VertexPositionNormal, VertexTexture1, VertexEmpty> p)
+        {
+            Length = 0;
+
+            if (Length != 0) // WIP
+            {
+                // ... Console Window or from the file itself? We need to test these things ingame if they work
+            }
+        }
+
+        internal int Size()
+        {
+            return 4 + (Length * 8);
+        }
+
+        internal void Write(BinaryWriter bw)
+        {
+            bw.Write(Length);
         }
     }
 }

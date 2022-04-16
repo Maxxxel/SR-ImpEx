@@ -14,6 +14,24 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\Users\Mgrom\source\repos\SR ImpEx\App\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,18 +52,39 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>DAF4820635B8E76E3C55C74FC4F6094DFBF1A535</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>SR ImpEx_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>SR_ImpEx.MainWindow</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CSharpImageLibrary, Version=4.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CSharpImageLibrary.4.2.0\lib\net462\CSharpImageLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IO.RecyclableMemoryStream.1.2.2\lib\net45\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
     </Reference>
     <Reference Include="Pfim, Version=0.10.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Pfim.0.10.3\lib\netstandard2.0\Pfim.dll</HintPath>
     </Reference>
     <Reference Include="SharpGLTF.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6f8b67557d279fe6, processorArchitecture=MSIL">
-      <HintPath>packages\SharpGLTF.Core.1.0.0-alpha0025\lib\netstandard2.0\SharpGLTF.Core.dll</HintPath>
+      <HintPath>packages\SharpGLTF.Core.1.0.0-alpha0026\lib\netstandard2.0\SharpGLTF.Core.dll</HintPath>
     </Reference>
     <Reference Include="SharpGLTF.Toolkit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6f8b67557d279fe6, processorArchitecture=MSIL">
-      <HintPath>packages\SharpGLTF.Toolkit.1.0.0-alpha0025\lib\netstandard2.0\SharpGLTF.Toolkit.dll</HintPath>
+      <HintPath>packages\SharpGLTF.Toolkit.1.0.0-alpha0026\lib\netstandard2.0\SharpGLTF.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -69,6 +108,9 @@
     <Reference Include="System.Text.Json, Version=5.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Text.Json.5.0.2\lib\net461\System.Text.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.5.24.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Tpl.Dataflow.4.5.24\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
+    </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
@@ -84,19 +126,25 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UsefulThings, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\UsefulCSharpThings.1.7.3\lib\net462\UsefulThings.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
     <Compile Include="Helpers\AnimationFinder.cs" />
+    <Compile Include="Structures\DRSFile\RootNodeInformation.cs" />
+    <Compile Include="Structures\DRSFile\Node.cs" />
+    <Compile Include="Structures\DRSFile\RootNode.cs" />
+    <Compile Include="Structures\DRSFile\CollisionBox.cs" />
+    <Compile Include="Structures\DRSFile\CollisionCylinder.cs" />
+    <Compile Include="Structures\DRSFile\CollisionShape.cs" />
+    <Compile Include="Structures\DRSFile\CGeoPrimitiveContainer.cs" />
     <Compile Include="Helpers\Exporter.cs" />
-    <Compile Include="LogViewer\LogEntry.cs" />
-    <Compile Include="LogViewer\PropertyChangedBase.cs" />
+    <Compile Include="Logger\LogEntry.cs" />
+    <Compile Include="Logger\PropertyChangedBase.cs" />
     <Compile Include="Structures\DRSFile\AnimationMarker.cs" />
     <Compile Include="Structures\DRSFile\AnimationMarkerSet.cs" />
     <Compile Include="Structures\DRSFile\AnimationSet.cs" />
@@ -105,7 +153,10 @@
     <Compile Include="Structures\DRSFile\BoneMatrix.cs" />
     <Compile Include="Structures\DRSFile\BoneVertex.cs" />
     <Compile Include="Structures\DRSFile\BoneWeight.cs" />
+    <Compile Include="Structures\DRSFile\CDspJointMap.cs" />
     <Compile Include="Structures\DRSFile\CGeoMesh.cs" />
+    <Compile Include="Structures\DRSFile\CGeoOBBTree.cs" />
+    <Compile Include="Structures\DRSFile\CollisionSphere.cs" />
     <Compile Include="Structures\DRSFile\Constraint.cs" />
     <Compile Include="Structures\DRSFile\CSkSkeleton.cs" />
     <Compile Include="Structures\DRSFile\CSkSkinInfo.cs" />
@@ -115,9 +166,11 @@
     <Compile Include="Structures\DRSFile\BattleforgeMesh.cs" />
     <Compile Include="Structures\DRSFile\BattleforgeSubMesh.cs" />
     <Compile Include="Structures\DRSFile\CDspMeshFile.cs" />
+    <Compile Include="Structures\DRSFile\DrwResourceMeta.cs" />
     <Compile Include="Structures\DRSFile\EmptyString.cs" />
     <Compile Include="Structures\DRSFile\Flow.cs" />
     <Compile Include="Structures\DRSFile\IKAtlas.cs" />
+    <Compile Include="Structures\DRSFile\JointGroup.cs" />
     <Compile Include="Structures\DRSFile\LevelOfDetail.cs" />
     <Compile Include="Structures\DRSFile\Material.cs" />
     <Compile Include="Structures\DRSFile\ModeAnimationKey.cs" />
@@ -127,6 +180,7 @@
     <Compile Include="Structures\DRSFile\UnknownStructure2.cs" />
     <Compile Include="Structures\DRSFile\UnknownStructure3.cs" />
     <Compile Include="Structures\DRSFile\VertexWeight.cs" />
+    <Compile Include="Structures\GLTFFile\GLTF.cs" />
     <Compile Include="Structures\GLTFFile\GLTFSkeleton.cs" />
     <Compile Include="Helpers\MathHelpers.cs" />
     <Compile Include="Structures\GLTFFile\SkinnedMesh.cs" />
@@ -142,10 +196,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -169,15 +219,32 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="SR ImpEx_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 und x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterResolveReferences">
+  <ItemGroup>
+    <EmbeddedResource Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll'">
+      <LogicalName>%(ReferenceCopyLocalPaths.DestinationSubDirectory)%(ReferenceCopyLocalPaths.Filename)%(ReferenceCopyLocalPaths.Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+</Target>
 </Project>
