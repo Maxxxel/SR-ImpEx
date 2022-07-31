@@ -8,9 +8,9 @@ using System.Windows;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("SR ImpEx")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A Tool to Import/Export Battleforge Models.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Maxxxel")]
 [assembly: AssemblyProduct("SR ImpEx")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]

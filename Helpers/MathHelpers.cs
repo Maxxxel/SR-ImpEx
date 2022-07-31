@@ -117,5 +117,45 @@ namespace SR_ImpEx.Structures.GLTFFile
             scale.Z = new Vector4(matrix.M13, matrix.M23, matrix.M33, matrix.M43).Length();
             return scale;
         }
+
+        public static Vector3 ToEulerAngles(Quaternion q)
+        {
+            // Store the Euler angles in radians
+            Vector3 pitchYawRoll = new Vector3();
+
+            double sqw = q.W * q.W;
+            double sqx = q.X * q.X;
+            double sqy = q.Y * q.Y;
+            double sqz = q.Z * q.Z;
+
+            // If quaternion is normalised the unit is one, otherwise it is the correction factor
+            double unit = sqx + sqy + sqz + sqw;
+            double test = q.X * q.Y + q.Z * q.W;
+
+            if (test > 0.4999f * unit)                              // 0.4999f OR 0.5f - EPSILON
+            {
+                // Singularity at north pole
+                pitchYawRoll.Y = (180 / (float)Math.PI) * 2f * (float)Math.Atan2(q.X, q.W);  // Yaw
+                pitchYawRoll.X = (180 / (float)Math.PI) * (float)Math.PI * 0.5f;                         // Pitch
+                pitchYawRoll.Z = 0f;                                // Roll
+                return pitchYawRoll;
+            }
+            else if (test < -0.4999f * unit)                        // -0.4999f OR -0.5f + EPSILON
+            {
+                // Singularity at south pole
+                pitchYawRoll.Y = (180 / (float)Math.PI) * -2f * (float)Math.Atan2(q.X, q.W); // Yaw
+                pitchYawRoll.X = (180 / (float)Math.PI) * -(float)Math.PI * 0.5f;                        // Pitch
+                pitchYawRoll.Z = 0f;                                // Roll
+                return pitchYawRoll;
+            }
+            else
+            {
+                pitchYawRoll.Y = (180 / (float)Math.PI) * (float)Math.Atan2(2f * q.Y * q.W - 2f * q.X * q.Z, sqx - sqy - sqz + sqw);       // Yaw
+                pitchYawRoll.X = (180 / (float)Math.PI) * (float)Math.Asin(2f * test / unit);                                             // Pitch
+                pitchYawRoll.Z = (180 / (float)Math.PI) * (float)Math.Atan2(2f * q.X * q.W - 2f * q.Y * q.Z, -sqx + sqy - sqz + sqw);      // Roll
+            }
+
+            return pitchYawRoll;
+        }
     }
 }

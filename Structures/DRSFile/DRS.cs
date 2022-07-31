@@ -1,13 +1,16 @@
-﻿using SR_ImpEx.Helpers;
+﻿using SharpGLTF.Scenes;
+using SR_ImpEx.Helpers;
 using SR_ImpEx.Structures.DRSFile;
 using SR_ImpEx.Structures.GLTFFile;
 using System;
 using System.IO;
+using System.Numerics;
 
 namespace SR_ImpEx.Structures
 {
     public class DRS
     {
+        public float ModelSize { get; set; }
         public int Magic { get; internal set; }
         public int NumberOfModels { get; internal set; }
         public string Location { get; internal set; }
@@ -133,10 +136,15 @@ namespace SR_ImpEx.Structures
             NodeHierarchyOffset = 20;
             NodeCount = 1;
 
+            MainWindow.LogMessage("[INFO] Creating CGeoMesh.");
             CGeoMesh = new CGeoMesh(gltf); NodeCount++;
+            MainWindow.LogMessage("[INFO] Creating CGeoOBBTree.");
             CGeoOBBTree = new CGeoOBBTree(gltf); NodeCount++;
+            MainWindow.LogMessage("[INFO] Creating CDspJointMap.");
             CDspJointMap = new CDspJointMap(gltf); NodeCount++;
+            MainWindow.LogMessage("[INFO] Creating CDspMeshFile.");
             CDspMeshFile = new CDspMeshFile(gltf); NodeCount++;
+            MainWindow.LogMessage("[INFO] Creating DrwResourceMeta.");
             DrwResourceMeta = new DrwResourceMeta(gltf); NodeCount++;
 
             if (gltf.SkinnedModel)
@@ -150,11 +158,11 @@ namespace SR_ImpEx.Structures
             }
 
             // We need to get the Sizes of our Classes now
-            int GeoSize = CGeoMesh.Size(); MainWindow.LogMessage($"[DEBUG] Geo Size {GeoSize}");
-            int OBBSize = CGeoOBBTree.Size(); MainWindow.LogMessage($"[DEBUG] OBBSize {OBBSize}");
-            int JointSize = CDspJointMap.Size(); MainWindow.LogMessage($"[DEBUG] JointSize {JointSize}");
-            int MeshSize = CDspMeshFile.Size(); MainWindow.LogMessage($"[DEBUG] MeshSize {MeshSize}");
-            int DrwResSize = DrwResourceMeta.Size(); MainWindow.LogMessage($"[DEBUG] DrwResSize {DrwResSize}");
+            int GeoSize = CGeoMesh.Size(); MainWindow.LogMessage($"[INFO] Geo Size {GeoSize}");
+            int OBBSize = CGeoOBBTree.Size(); MainWindow.LogMessage($"[INFO] OBBSize {OBBSize}");
+            int JointSize = CDspJointMap.Size(); MainWindow.LogMessage($"[INFO] JointSize {JointSize}");
+            int MeshSize = CDspMeshFile.Size(); MainWindow.LogMessage($"[INFO] MeshSize {MeshSize}");
+            int DrwResSize = DrwResourceMeta.Size(); MainWindow.LogMessage($"[INFO] DrwResSize {DrwResSize}");
             int PrimitiveSize = 0;
             int CollisionSize = 0;
 

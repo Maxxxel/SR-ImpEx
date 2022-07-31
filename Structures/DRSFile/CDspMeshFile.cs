@@ -18,7 +18,6 @@ namespace SR_ImpEx.Structures
         public Vector3 BoundingBoxUpperRightCorner1 { get; private set; }
         public BattleforgeMesh[] Meshes { get; }
         public Vector4[] SomePoints { get; }
-
         public CDspMeshFile(FileWrapper file)
         {
             Magic = file.ReadInt();
@@ -55,22 +54,25 @@ namespace SR_ImpEx.Structures
                 MeshCount = gltf.staticMesh.Meshes.Length;
             }
 
-            var TT = Toolkit.EvaluateTriangles(gltf.Root.DefaultScene).ToList();
-            IEnumerable<Vector3> points = TT.SelectMany(item => new[] { item.A.GetGeometry().GetPosition(), item.B.GetGeometry().GetPosition(), item.C.GetGeometry().GetPosition() }.Distinct().ToList());
-            float xmin = (from p in points select p.X).Min();
-            float xmax = (from p in points select p.X).Max();
-            float ymin = (from p in points select p.Y).Min();
-            float ymax = (from p in points select p.Y).Max();
-            float zmin = (from p in points select p.Z).Min();
-            float zmax = (from p in points select p.Z).Max();
+            MainWindow.LogMessage($"[INFO] Total Meshes to export: {MeshCount}");
 
-            BoundingBoxLowerLeftCorner1 = new Vector3(xmin, ymin, zmin); // 12 Maybe with Animations???
-            BoundingBoxUpperRightCorner1 = new Vector3(xmax, ymax, zmax); // 12 Maybe with Animations???
+            (Vector3 Min, Vector3 Max) BB = SharpGLTF.Runtime.MeshDecoder.EvaluateBoundingBox(gltf.Root.DefaultScene);
+            BoundingBoxLowerLeftCorner1 = BB.Min; // Maybe with Animations???
+            BoundingBoxUpperRightCorner1 = BB.Max; // Maybe with Animations???
             Meshes = new BattleforgeMesh[MeshCount];
 
             for (int m = 0; m < MeshCount; m++)
             {
-                Meshes[m] = new BattleforgeMesh(gltf, m);
+                MainWindow.LogMessage($"[INFO] Creating Submesh #{m}");
+                try
+                {
+                    Meshes[m] = new BattleforgeMesh(gltf, m);
+                }
+                catch (Exception ex)
+                {
+                    MainWindow.LogMessage($"[ERROR] {ex}");
+                    return;
+                }
                 Meshes[m].BoundingBoxLowerLeftCorner2 = BoundingBoxLowerLeftCorner1;
                 Meshes[m].BoundingBoxUpperRightCorner2 = BoundingBoxUpperRightCorner1;
             }
@@ -80,8 +82,7 @@ namespace SR_ImpEx.Structures
             SomePoints[1] = new Vector4(1, 1, 0, 0);
             SomePoints[2] = new Vector4(0, 0, 1, 1);
         }
-
-        internal int Size()
+        public int Size()
         {
             int Add = 0;
 
@@ -92,8 +93,7 @@ namespace SR_ImpEx.Structures
 
             return 84 + Add;
         }
-
-        internal void Write(BinaryWriter bw)
+        public void Write(BinaryWriter bw)
         {
             bw.Write(Magic);
             bw.Write(Zero);

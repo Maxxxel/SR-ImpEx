@@ -75,19 +75,16 @@ namespace SR_ImpEx.Structures.GLTFFile
                 Texture ColorMap = cDspMeshFile.Meshes[s].Textures.Texture.Where(tx => tx.Name.Contains("_col")).Single();
                 Texture NormalMap = cDspMeshFile.Meshes[s].Textures.Texture.Where(tx => tx.Name.Contains("_nor")).Single();
 
-                string CurrentPath = AppContext.BaseDirectory;
-                if (!Directory.Exists(Path.Combine(CurrentPath, "GLTF_Exports"))) Directory.CreateDirectory(Path.Combine(CurrentPath, "GLTF_Exports"));
-
                 if (ColorMap != null)
                 {
-                    ImageConverter.DDSToPNG(location + ColorMap.Name + ".dds", CurrentPath + "/GLTF_Exports/_temporary_" + ColorMap.Name);
-                    Textures.WithChannelImage(KnownChannel.BaseColor, CurrentPath + "/GLTF_Exports/_temporary_" + ColorMap.Name.Replace(".dds", "") + ".png");
+                    ImageConverter.DDSToPNG(location + ColorMap.Name + ".dds", Exporter.Folder + "/" + ColorMap.Name);
+                    Textures.WithChannelImage(KnownChannel.BaseColor, Exporter.Folder + "/" + ColorMap.Name.Replace(".dds", "") + ".png");
                 }
 
                 if (NormalMap != null)
                 {
-                    ImageConverter.DDSToPNG(location + NormalMap.Name + ".dds", CurrentPath + "/GLTF_Exports/_temporary_" + NormalMap.Name);
-                    Textures.WithChannelImage(KnownChannel.Normal, CurrentPath + "/GLTF_Exports/_temporary_" + NormalMap.Name.Replace(".dds", "") + ".png");
+                    ImageConverter.DDSToPNG(location + NormalMap.Name + ".dds", Exporter.Folder + "/" + NormalMap.Name);
+                    Textures.WithChannelImage(KnownChannel.Normal, Exporter.Folder + "/" + NormalMap.Name.Replace(".dds", "") + ".png");
                 }
 
                 PrimitiveBuilder<MaterialBuilder, VertexPositionNormal, VertexTexture1, VertexJoints4> Primitive = Mesh.UsePrimitive(Textures);

@@ -23,11 +23,11 @@ namespace SR_ImpEx.Structures
 
         public LevelOfDetail(PrimitiveBuilder<MaterialBuilder, VertexPositionNormal, VertexTexture1, VertexEmpty> p)
         {
-            Length = 0; // WIP
+            Length = 1; // WIP
 
             if (Length == 1)
             {
-                LODLevel = 1; // We need to find out what it changes ingame
+                LODLevel = 0; // We need to find out what it changes ingame
             }
         }
 

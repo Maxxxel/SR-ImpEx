@@ -25,7 +25,7 @@ namespace SR_ImpEx.Structures
         public int BoolParamTransfer { get; }
         public Textures Textures { get; }
         public Refraction Refraction { get; }
-        public Material Material { get; }
+        public MaterialContainer Materials { get; }
         public LevelOfDetail LevelOfDetail { get; }
         public EmptyString EmptyString { get; }
         public Flow Flow { get; }
@@ -53,7 +53,7 @@ namespace SR_ImpEx.Structures
                 BoolParamTransfer = file.ReadInt();
                 Textures = new Textures(file);
                 Refraction = new Refraction(file);
-                Material = new Material(file);
+                Materials = new MaterialContainer(file);
                 LevelOfDetail = new LevelOfDetail(file);
                 EmptyString = new EmptyString(file);
                 Flow = new Flow(file);
@@ -63,7 +63,6 @@ namespace SR_ImpEx.Structures
                 // Unsupported Material
             }
         }
-
         public BattleforgeMesh(GLTF gltf, int m)
         {
             if (gltf.SkinnedModel)
@@ -72,12 +71,17 @@ namespace SR_ImpEx.Structures
             }
             else
             {
-                foreach (PrimitiveBuilder<MaterialBuilder, VertexPositionNormal, VertexTexture1, VertexEmpty> P in gltf.staticMesh.Meshes[m].Primitives)
+                MeshBuilder<VertexPositionNormal, VertexTexture1, VertexEmpty> CurrentMesh = gltf.staticMesh.Meshes[m];
+
+                MainWindow.LogMessage($"[INFO] Exporting Mesh #{m} with {CurrentMesh.Primitives.Count} Primitives");
+                int debugcounter = 0;
+
+                foreach (PrimitiveBuilder<MaterialBuilder, VertexPositionNormal, VertexTexture1, VertexEmpty> P in CurrentMesh.Primitives)
                 {
-                    IReadOnlyList<(int, int, int)> Tris = P.Triangles; // e. g. 100
+                    IReadOnlyList<(int, int, int)> Tris = P.Triangles;
                     VertexCount = P.Vertices.Count;
-                    FaceCount = Tris.Count; // e. g. 300
-                    Triangles = new Triangle[FaceCount]; // e. g. 100
+                    FaceCount = Tris.Count;
+                    Triangles = new Triangle[FaceCount];
 
                     for (int i = 0; i < FaceCount; i++)
                     {
@@ -85,23 +89,50 @@ namespace SR_ImpEx.Structures
                         Triangles[i] = new Triangle(Tri);
                     }
 
+                    MainWindow.LogMessage($"[INFO] Mesh #{m} Primitive #{debugcounter} Vertices: {VertexCount}, Triangles: {FaceCount}");
+
                     MeshCount = 1; // the other FVF can be ignored
                     BattleforgeSubMeshes = new BattleforgeSubMesh[MeshCount];
-                    BattleforgeSubMeshes[0] = new BattleforgeSubMesh(P);
+                    Matrix4x4 Transform = new Matrix4x4();
+                    gltf.staticMesh.MeshMatrixHashes.TryGetValue(CurrentMesh.GetHashCode(), out Transform);
+
+                    MainWindow.LogMessage("[INFO] Creating Submeshes...");
+                    BattleforgeSubMeshes[0] = new BattleforgeSubMesh(P, Transform);
                     MaterialID = 25702; // Verified
                     MaterialParameters = -86061050; // Verified
                     SthOfMaterialCore = 0; // Verified
-                    BoolParamTransfer = 0; // Find out
+                    MainWindow.LogMessage("[INFO] Creating Textures...");
                     Textures = new Textures(P, m);
                     Refraction = new Refraction(P); // WIP
-                    Material = new Material(P);
+                    Materials = new MaterialContainer(P, m);
                     LevelOfDetail = new LevelOfDetail(P);
                     EmptyString = new EmptyString(P);
                     Flow = new Flow(P);
+
+                    long boolParameter = 0;
+
+                    // DecalMode 
+                    //if (CurrentMesh.Extras.ToJson().Contains("DECAL"))
+                    //{
+                    //    boolParameter += 10;
+                    //}
+                    // UseParameterMap 
+                    if (Textures.HasParameterMap)
+                    {
+                        boolParameter += 10000000000000000;
+                    }
+                    // UseNormalMap
+                    if (Textures.HasNormalMap)
+                    {
+                        boolParameter += 100000000000000000;
+                    }
+
+                    BoolParamTransfer = Convert.ToInt32(boolParameter.ToString(), 2);
+
+                    debugcounter++;
                 }
             }
         }
-
         internal void Write(BinaryWriter bw)
         {
             bw.Write(VertexCount);
@@ -111,9 +142,7 @@ namespace SR_ImpEx.Structures
 
             bw.Write(MeshCount);
 
-            BattleforgeSubMeshes[0].Write(bw, VertexCount);
-            //Meshes[1].Write(bw, VertexCount);
-            //Meshes[2].Write(bw, VertexCount);
+            BattleforgeSubMeshes[0].Write(bw, VertexCount); // Its only one
             bw.Write(BoundingBoxLowerLeftCorner2.X);
             bw.Write(BoundingBoxLowerLeftCorner2.Y);
             bw.Write(BoundingBoxLowerLeftCorner2.Z);
@@ -126,15 +155,14 @@ namespace SR_ImpEx.Structures
             bw.Write(BoolParamTransfer);
             Textures.Write(bw);
             Refraction.Write(bw);
-            Material.Write(bw);
+            Materials.Write(bw);
             LevelOfDetail.Write(bw);
             EmptyString.Write(bw);
             Flow.Write(bw);
         }
-
         internal int Size()
         {
-            return 47 + FaceCount * 6 + (8 + VertexCount * 32) + Textures.Size() + Refraction.Size() + Material.Size() + LevelOfDetail.Size() + EmptyString.Size() + Flow.Size();
+            return 47 + FaceCount * 6 + (8 + VertexCount * 32) + Textures.Size() + Refraction.Size() + Materials.Size() + LevelOfDetail.Size() + EmptyString.Size() + Flow.Size();
         }
     }
 }

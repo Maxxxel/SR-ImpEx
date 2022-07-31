@@ -17,6 +17,15 @@ namespace SR_ImpEx.Structures
         public Triangle[] Triangles { get; }
         public int VertexCount { get; }
         public Vector4[] Vertices { get; }
+        public float MaxX { get; private set; }
+        public float MinX { get; private set; }
+        public float MaxY { get; private set; }
+        public float MinY { get; private set; }
+        public float MaxZ { get; private set; }
+        public float MaxW { get; private set; }
+        public float MinZ { get; private set; }
+        public float MinW { get; private set; }
+
         public CGeoMesh(FileWrapper file)
         {
             Magic = file.ReadInt(); // 1
@@ -35,10 +44,29 @@ namespace SR_ImpEx.Structures
                 Vertices = new Vector4[VertexCount];
 
                 for (int v = 0; v < VertexCount; v++)
-                    Vertices[v] = new Vector4(file.ReadFloat(), file.ReadFloat(), file.ReadFloat(), file.ReadFloat());
-            }
-        }
+                {
+                    var X = file.ReadFloat();
+                    var Y = file.ReadFloat();
+                    var Z = file.ReadFloat();
+                    var W = file.ReadFloat();
+                    Vertices[v] = new Vector4(X, Y, Z, W);
 
+                    // Get the highest and lowest values for X, Y, Z, W
+                    if (X > MaxX) MaxX = X;
+                    if (X < MinX) MinX = X;
+                    if (Y > MaxY) MaxY = Y;
+                    if (Y < MinY) MinY = Y;
+                    if (Z > MaxZ) MaxZ = Z;
+                    if (Z < MinZ) MinZ = Z;
+                    if (W > MaxW) MaxW = W;
+                    if (W < MinW) MinW = W;
+                }
+            }
+
+            // Print the highest and lowest values for X, Y, Z, W using MainWindow.LogMessage in one Line
+            MainWindow.LogMessage(
+                $"MaxX: {MaxX}, MinX: {MinX}, MaxY: {MaxY}, MinY: {MinY}, MaxZ: {MaxZ}, MinZ: {MinZ}, MaxW: {MaxW}, MinW: {MinW}");
+        }
         public CGeoMesh(GLTF gltf)
         {
             Magic = 1;
@@ -68,12 +96,10 @@ namespace SR_ImpEx.Structures
                 }
             }
         }
-
         internal int Size()
         {
             return 12 + (IndexCount * 2) + (VertexCount * 16);
         }
-
         internal void Write(BinaryWriter bw)
         {
             bw.Write(Magic);

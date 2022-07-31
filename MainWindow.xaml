@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SR_ImpEx"
         xmlns:logger="clr-namespace:SR_ImpEx.Logger"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -99,16 +98,37 @@
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="75" />
+                <ColumnDefinition Width="75" />
                 <ColumnDefinition Width="150" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Row="0" Grid.Column="0" Margin="5,0,0,5" Content="Import File" Click="ImportFile" />
-            <Button Grid.Row="1" Grid.Column="0" Margin="5,0,0,5" Content="Export File" Click="ExportFile" />
-            <Button Grid.Row="2" Grid.Column="0" Margin="5,0,0,5" Content="Open Export Folder" Click="OpenExportFolder" />
-
-            <Label Grid.Row="3" Grid.Column="0" Content="Name:"/>
-            <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" x:Name="Model_Name" />
+            <Button     Grid.Row="0" Grid.Column="0" Margin="5,0,0,5" Content="Import File" Click="ImportFile" Grid.ColumnSpan="2" />
+            <Button     Grid.Row="1" Grid.Column="0" Margin="5,0,0,5" Content="Export File" Click="ExportFile" Grid.ColumnSpan="2" x:Name="ExportButton" Visibility="Hidden" />
+            <Button     Grid.Row="2" Grid.Column="0" Margin="5,0,0,5" Content="Open Export Folder" Click="OpenExportFolder" Grid.ColumnSpan="2" />
+            <Label      Grid.Row="3" Grid.Column="0" Content="Name:" Grid.ColumnSpan="2"/>
+            <TextBox    Grid.Row="3" Grid.Column="1" IsReadOnly="True" x:Name="Model_Name" Grid.ColumnSpan="2"/>
+            <Label      Grid.Row="4" Grid.Column="0" Content="Size (meter):" Grid.ColumnSpan="2"/>
+            <TextBox    Grid.Row="4" Grid.Column="1" IsReadOnly="False" x:Name="Model_Size" Grid.ColumnSpan="2">
+                <TextBox.ToolTip>
+                    <TextBlock>
+                        Batariel: 13.4m
+                        <LineBreak/>
+                        Juggernaut: 13.2m
+                        <LineBreak/>
+                        Magma Hurler: 6.15m
+                        <LineBreak/>
+                        Witchclaws: 4.32m
+                        <LineBreak/>
+                        Fire Dancer: 3.5m
+                        <LineBreak/>
+                        Forsaken: 2.21m
+                        <LineBreak/>
+                    </TextBlock>
+                </TextBox.ToolTip>
+            </TextBox>
+            <Button     Grid.Row="5" Grid.Column="1" Content="Reset" x:Name="Reset" Click="Reset_Click" />
+            <Button     Grid.Row="5" Grid.Column="2" Content="Update" x:Name="Change" Click="Change_Click"/>
         </Grid>
 
         <ItemsControl ItemsSource="{Binding}" Style="{StaticResource LogViewerStyle}" DockPanel.Dock="Bottom" Margin="10,0,10,10" Foreground="Black">
