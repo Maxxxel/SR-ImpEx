@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Assimp;
+using Microsoft.Win32;
 using SR_ImpEx.Helpers;
 using SR_ImpEx.Logger;
 using SR_ImpEx.Structures;
@@ -21,6 +22,7 @@ namespace SR_ImpEx
 {
     public partial class MainWindow : Window
     {
+        public Scene Model { get; private set; }
         public DRS DRSFile { get; private set; }
         public GLTF GLTFFile { get; private set; }
         //AnimationFinder AnimationFinder = new AnimationFinder();
@@ -28,11 +30,12 @@ namespace SR_ImpEx
         public static int index { get; private set; }
         public static ObservableCollection<LogEntry> LogEntries { get; set; }
         public static string defaultModelSize { get; private set; }
-        public static Matrix4x4 Scale { get; private set; }
+        public static System.Numerics.Matrix4x4 Scale { get; private set; }
         public Boolean SizeChanged { get; private set; }
         Exporter Exporter = new Exporter();
         //private HashSet<string> animations;
         private bool AutoScroll = true;
+        AssimpContext importer = new AssimpContext();
         public MainWindow()
         {
             if (null == Application.Current)
@@ -51,24 +54,59 @@ namespace SR_ImpEx
             OpenFileDialog = new OpenFileDialog();
             // *.bmg files are currently not supported!
             // *.drs files are planed to be supported in the future.
-            // OpenFileDialog.Filter = "All files|*.glb;*.gltf;*.drs|gLTF|*.glb;*.gltf|Battleforge DRS|*.drs";
-            OpenFileDialog.Filter = "All files|*.glb;*.gltf|gLTF|*.glb;*.gltf";
+            OpenFileDialog.Filter = "All files|*.glb;*.gltf;*.obj|gLTF|*.glb;*.gltf|Wavefront Object|*.obj";
 
             if (OpenFileDialog.ShowDialog() == true)
             {
                 string Extension = Path.GetExtension(OpenFileDialog.FileName).ToUpperInvariant();
-
-                if (Extension == ".GLB" || Extension == ".GLTF")
+                LogMessage("[INFO] Reading a " + Extension + " file...");
+                
+                if (Extension == ".DRS")
                 {
-                    LogMessage("[INFO] Reading a " + Extension + " file...");
-                    ImportGLTFFile(OpenFileDialog.FileName);
+                    // Unsupported yet
+                    LogMessage("[ERROR] DRS files are not supported yet!");
                 }
+                else
+                {
+                    Import3DFile(OpenFileDialog.FileName);
+                }
+            }
+        }
+        private void Import3DFile(string fileName)
+        {
+            Model = importer.ImportFile(fileName, PostProcessSteps.GenerateBoundingBoxes); // | PostProcessSteps.Triangulate | PostProcessSteps.SortByPrimitiveType | PostProcessSteps.FixInFacingNormals | PostProcessSteps.JoinIdenticalVertices | PostProcessSteps.ValidateDataStructure);
+            // X = Widht in Blender (X)
+            // Y = Height in Blender (Z)
+            // Z = Length in Blender (Y)
+
+            if (Model == null)
+            {
+                LogMessage("[ERROR] Failed to import file!");
+                return;
+            }
+            else
+            {
+                float height = 0;
+                
+                foreach (var mesh in Model.Meshes)
+                {
+                    if (mesh.BoundingBox.Max.Y > height)
+                    {
+                        height = mesh.BoundingBox.Max.Y;
+                    }
+                }
+
+                Model_Name.Text = OpenFileDialog.SafeFileName;
+                defaultModelSize = height.ToString();
+                Model_Size.Text = defaultModelSize;
+                ExportButton.Visibility = Visibility.Visible;                
+                LogMessage("[INFO] File imported successfully!");
             }
         }
         private void ClearData()
         {
             Model_Name.Text = "Please click 'Import File' to select a file.";
-            Scale = Matrix4x4.CreateScale(1);
+            Scale = System.Numerics.Matrix4x4.CreateScale(1);
         }
         //private void ImportDRSFile(string fileName)
         //{
@@ -79,63 +117,72 @@ namespace SR_ImpEx
         //    FillData();
         //    LogMessage("[INFO] File read successfully.");
         //}
-        private void FillData()
-        {
-            Model_Name.Text = OpenFileDialog.SafeFileName;
-
-            if (GLTFFile != null) Model_Size.Text = GLTFFile.ModelSize.ToString();
-            if (DRSFile != null) Model_Size.Text = DRSFile.ModelSize.ToString();
-
-            // Set the default size
-            defaultModelSize = Model_Size.Text;
-        }
-        private void ImportGLTFFile(string filePath)
-        {
-            // Read the file into a virtual GLTF object
-            GLTFFile = new GLTF(filePath);
-            // Fill the Interface with the data
-            FillData();
-            LogMessage("[INFO] File read successfully.");
-            ExportButton.Visibility = Visibility.Visible;
-        }
+        
+        //private void ImportGLTFFile(string filePath)
+        //{
+        //    // Read the file into a virtual GLTF object
+        //    GLTFFile = new GLTF(filePath);
+        //    // Fill the Interface with the data
+        //    FillData();
+        //    LogMessage("[INFO] File read successfully.");
+        //    ExportButton.Visibility = Visibility.Visible;
+        //}
         private void ExportFile(object sender, RoutedEventArgs e)
         {
             if (OpenFileDialog != null)
             {
                 string Extension = Path.GetExtension(OpenFileDialog.FileName).ToUpperInvariant();
 
-                //if (Extension == ".DRS")
-                //{
-                //    LogMessage($"[INFO] Exporting {OpenFileDialog.SafeFileName}...");
-                //    ExportDRSFile(OpenFileDialog.SafeFileName.Replace(Extension, ""));
-                //}
-                
-                if (Extension == ".GLB" || Extension == ".GLTF")
+                if (Extension == ".DRS")
+                {
+                    //    LogMessage($"[INFO] Exporting {OpenFileDialog.SafeFileName}...");
+                    //    ExportDRSFile(OpenFileDialog.SafeFileName.Replace(Extension, ""));
+                }
+                else
                 {
                     LogMessage($"[INFO] Exporting {OpenFileDialog.SafeFileName}...");
-                    ExportGLTFFile(OpenFileDialog.SafeFileName.Replace(Extension, ""));
+                    Export3DFile(OpenFileDialog.SafeFileName.Replace(Extension, ""));
                 }
             }
         }
-        private void ExportGLTFFile(string fileName)
+        private void Export3DFile(string fileName)
         {
-            if (GLTFFile != null)
+            if (Model != null)
             {
                 // Set the Scale of the model
                 if (SizeChanged)
                 {
-                    GLTFFile.Root.ApplyBasisTransform(Scale);
-                    SizeChanged = false;
+                    //GLTFFile.Root.ApplyBasisTransform(Scale);
+                    //SizeChanged = false;
                 }
-                // Export the scaled Model to a GLTF file for debugging
-                //GLTFFile.Root.SaveGLB(fileName);
+                // Export the scaled Model to a new file for debugging
+                //importer.ExportFile(Model, fileName + ".obj", "obj"); //, PostProcessPreset.TargetRealTimeMaximumQuality | PostProcessSteps.EmbedTextures);
                 // Create the Static Mesh
-                GLTFFile.staticMesh = new StaticMesh(GLTFFile.Root);
+                //GLTFFile.staticMesh = new StaticMesh(GLTFFile.Root);
                 // Create the DRS file from the GLTF file
-                Thread Worker = new Thread(() => Exporter.ExportToDRS(fileName, GLTFFile));
+                Thread Worker = new Thread(() => Exporter.ExportToDRS(fileName, Model));
                 Worker.Start();
             }
-        }
+        }        
+        //private void Export3DFile(string fileName)
+        //{
+        //    if (GLTFFile != null)
+        //    {
+        //        // Set the Scale of the model
+        //        if (SizeChanged)
+        //        {
+        //            GLTFFile.Root.ApplyBasisTransform(Scale);
+        //            SizeChanged = false;
+        //        }
+        //        // Export the scaled Model to a GLTF file for debugging
+        //        //GLTFFile.Root.SaveGLB(fileName);
+        //        // Create the Static Mesh
+        //        GLTFFile.staticMesh = new StaticMesh(GLTFFile.Root);
+        //        // Create the DRS file from the GLTF file
+        //        Thread Worker = new Thread(() => Exporter.ExportToDRS(fileName, GLTFFile));
+        //        Worker.Start();
+        //    }
+        //}
         //private void ExportDRSFile(string fileName)
         //{
         //    if (DRSFile != null)
@@ -198,7 +245,7 @@ namespace SR_ImpEx
             Model_Size.Text = defaultModelSize;
             var CurrentSize = GLTFFile.GetModelSize();
             var Dif = float.Parse(Model_Size.Text) / CurrentSize;
-            Scale = Matrix4x4.CreateScale(Dif);
+            Scale = System.Numerics.Matrix4x4.CreateScale(Dif);
             SizeChanged = true;            
 
             // Print a debug message to the log
@@ -213,7 +260,7 @@ namespace SR_ImpEx
             var Dif = NewSize / CurrentSize;
             LogMessage("[INFO] Scaling the model Default Height: (" + CurrentSize + ") New Height: (" + NewSize + ")");
 
-            Scale = Matrix4x4.CreateScale(Dif);
+            Scale = System.Numerics.Matrix4x4.CreateScale(Dif);
             SizeChanged = true;
             LogMessage($"[INFO] Model size changed to {Model_Size.Text}. Hit the 'Export' button to apply the change.");
         }

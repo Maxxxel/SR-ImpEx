@@ -82,6 +82,59 @@ namespace SR_ImpEx.Structures
             SomePoints[1] = new Vector4(1, 1, 0, 0);
             SomePoints[2] = new Vector4(0, 0, 1, 1);
         }
+
+        public CDspMeshFile(Assimp.Scene model)
+        {
+            Magic = 1314189598;
+            Zero = 0;
+
+            if (model.HasAnimations)
+            {
+
+            }
+            else
+            {
+                MeshCount = model.MeshCount;
+            }
+
+            MainWindow.LogMessage($"[INFO] Total Meshes to export: {MeshCount}");
+
+            (Vector3 Min, Vector3 Max) BB = (Vector3.Zero, Vector3.Zero);
+            Meshes = new BattleforgeMesh[MeshCount];
+
+            for (int m = 0; m < MeshCount; m++)
+            {
+                MainWindow.LogMessage($"[INFO] Creating Submesh #{m}");
+                try
+                {
+                    Meshes[m] = new BattleforgeMesh(model, m);
+                }
+                catch (Exception ex)
+                {
+                    MainWindow.LogMessage($"[ERROR] {ex}");
+                    return;
+                }
+
+                Assimp.Mesh mesh = model.Meshes[m];
+                Assimp.Vector3D min = mesh.BoundingBox.Min;
+                Assimp.Vector3D max = mesh.BoundingBox.Max;
+                Vector3 minV = new Vector3(min.X, min.Y, min.Z);
+                Vector3 maxV = new Vector3(max.X, max.Y, max.Z);
+                Meshes[m].BoundingBoxLowerLeftCorner2 = minV;
+                Meshes[m].BoundingBoxUpperRightCorner2 = maxV;
+
+                BB.Min = Vector3.Min(BB.Min, minV);
+                BB.Max = Vector3.Max(BB.Max, maxV);
+            }
+
+            BoundingBoxLowerLeftCorner1 = BB.Min; // Maybe with Animations???
+            BoundingBoxUpperRightCorner1 = BB.Max; // Maybe with Animations???
+            SomePoints = new Vector4[3];
+            SomePoints[0] = new Vector4(0, 0, 0, 1);
+            SomePoints[1] = new Vector4(1, 1, 0, 0);
+            SomePoints[2] = new Vector4(0, 0, 1, 1);
+        }
+
         public int Size()
         {
             int Add = 0;

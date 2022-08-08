@@ -1,4 +1,5 @@
-﻿using SR_ImpEx.Helpers;
+﻿using Assimp;
+using SR_ImpEx.Helpers;
 using System;
 using System.IO;
 
@@ -16,6 +17,11 @@ namespace SR_ImpEx.Structures
         public Triangle((int, int, int) tri)
         {
             Indices = new short[] { (short)tri.Item1, (short)tri.Item2, (short)tri.Item3 };
+        }
+
+        public Triangle(Face face)
+        {
+            Indices = new short[] { (short)face.Indices[0], (short)face.Indices[1], (short)face.Indices[2] };
         }
 
         internal void Write(BinaryWriter bw)

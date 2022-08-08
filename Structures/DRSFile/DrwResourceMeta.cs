@@ -1,4 +1,5 @@
-﻿using SR_ImpEx.Structures.GLTFFile;
+﻿using Assimp;
+using SR_ImpEx.Structures.GLTFFile;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,13 @@ namespace SR_ImpEx.Structures.DRSFile
         public string UnknownHash { get; }
 
         public DrwResourceMeta(GLTF gltf)
+        {
+            UnknownInts = new int[2];
+            Length = 0;
+            UnknownHash = ""; // ???
+        }
+
+        public DrwResourceMeta(Scene model)
         {
             UnknownInts = new int[2];
             Length = 0;

@@ -1,4 +1,5 @@
-﻿using DdsFileTypePlus;
+﻿using Assimp;
+using DdsFileTypePlus;
 using PaintDotNet;
 using SharpGLTF.Materials;
 using SharpGLTF.Memory;
@@ -85,6 +86,11 @@ namespace SR_ImpEx.Structures
                     break;
             }
         }
+
+        public Texture(Mesh currentMesh, int i)
+        {
+        }
+
         internal int Size()
         {
             return 12 + Length;

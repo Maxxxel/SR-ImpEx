@@ -74,6 +74,9 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AssimpNet, Version=5.0.0.0, Culture=neutral, PublicKeyToken=0d51b391f59f42a6, processorArchitecture=MSIL">
+      <HintPath>packages\AssimpNet.5.0.0-beta1\lib\net40\AssimpNet.dll</HintPath>
+    </Reference>
     <Reference Include="BCnEncoderNet45, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\BCnEncoder.Net45.0.0.1\lib\net45\BCnEncoderNet45.dll</HintPath>
     </Reference>
@@ -284,6 +287,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\System.Text.Json.7.0.0-preview.3.22175.4\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.Text.Json.7.0.0-preview.3.22175.4\build\System.Text.Json.targets'))" />
     <Error Condition="!Exists('packages\DdsFileTypePlusHack.1.1.0-beta1\build\DdsFileTypePlusHack.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\DdsFileTypePlusHack.1.1.0-beta1\build\DdsFileTypePlusHack.targets'))" />
+    <Error Condition="!Exists('packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets'))" />
   </Target>
   <Import Project="packages\DdsFileTypePlusHack.1.1.0-beta1\build\DdsFileTypePlusHack.targets" Condition="Exists('packages\DdsFileTypePlusHack.1.1.0-beta1\build\DdsFileTypePlusHack.targets')" />
+  <Import Project="packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets" Condition="Exists('packages\AssimpNet.5.0.0-beta1\build\AssimpNet.targets')" />
 </Project>

@@ -1,4 +1,5 @@
-﻿using SharpGLTF.Geometry;
+﻿using Assimp;
+using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
 using SharpGLTF.Materials;
 using SR_ImpEx.Helpers;
@@ -149,6 +150,17 @@ namespace SR_ImpEx.Structures
                 }
             }
         }
+
+        public Textures(Mesh currentMesh)
+        {
+            Length = currentMesh.TextureCoordinateChannelCount; // Add a check for supported Channels
+            Texture = new Texture[Length];
+            for (int i = 0; i < Length; i++)
+            {
+                Texture[i] = new Texture(currentMesh, i);
+            }
+        }
+
         internal int Size()
         {
             int Add = 0;

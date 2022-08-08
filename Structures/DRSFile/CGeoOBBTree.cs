@@ -39,6 +39,16 @@ namespace SR_ImpEx.Structures.DRSFile
             };
         }
 
+        public CGeoOBBTree(Assimp.Scene model)
+        {
+            // We try to ignore this for now as we want to extand the Triangle Limit withing the meshes to more than 32.767! If this OBB is needed later, we should try to calculate one.
+            Magic = 1845540702;
+            Version = 3;
+            MatrixCount = 0; // We need to wait for 100 % Decryption
+            Matrices = new Matrix4x4[MatrixCount];
+            TriangleCount = 0;
+        }
+
         internal int Size()
         {
             return 16 + (MatrixCount * 64) + (TriangleCount * 6);

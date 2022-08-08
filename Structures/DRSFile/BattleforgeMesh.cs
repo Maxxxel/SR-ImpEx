@@ -133,6 +133,80 @@ namespace SR_ImpEx.Structures
                 }
             }
         }
+        public BattleforgeMesh(Assimp.Scene model, int m)
+        {
+            if (model.HasAnimations)
+            {
+                // WIP
+            }
+            else
+            {
+                Assimp.Mesh CurrentMesh = model.Meshes[m];
+                int debugcounter = 0;
+
+                VertexCount = CurrentMesh.VertexCount;
+                FaceCount = CurrentMesh.FaceCount;
+                Triangles = new Triangle[FaceCount];
+                
+                for (int i = 0; i < FaceCount; i++)
+                {
+                    Triangles[i] = new Triangle(CurrentMesh.Faces[i]);
+                }
+
+                MeshCount = 1; // the other FVF can be ignored
+                BattleforgeSubMeshes = new BattleforgeSubMesh[MeshCount];
+                MaterialID = 25702; // Verified
+                MaterialParameters = -86061050; // Verified
+                SthOfMaterialCore = 0; // Verified
+                //Textures = new Textures(model.Textures);
+                //Refraction = new Refraction(CurrentMesh); // WIP
+                //Materials = new MaterialContainer(CurrentMesh);
+                //LevelOfDetail = new LevelOfDetail(CurrentMesh);
+                //EmptyString = new EmptyString(CurrentMesh);
+                //Flow = new Flow(CurrentMesh);
+                
+
+
+                //    Matrix4x4 Transform = new Matrix4x4();
+                //    gltf.staticMesh.MeshMatrixHashes.TryGetValue(CurrentMesh.GetHashCode(), out Transform);
+
+                //    MainWindow.LogMessage("[INFO] Creating Submeshes...");
+                //    BattleforgeSubMeshes[0] = new BattleforgeSubMesh(P, Transform);
+                //    MaterialID = 25702; // Verified
+                //    MaterialParameters = -86061050; // Verified
+                //    SthOfMaterialCore = 0; // Verified
+                //    MainWindow.LogMessage("[INFO] Creating Textures...");
+                //    Textures = new Textures(P, m);
+                //    Refraction = new Refraction(P); // WIP
+                //    Materials = new MaterialContainer(P, m);
+                //    LevelOfDetail = new LevelOfDetail(P);
+                //    EmptyString = new EmptyString(P);
+                //    Flow = new Flow(P);
+
+                //    long boolParameter = 0;
+
+                //    // DecalMode 
+                //    //if (CurrentMesh.Extras.ToJson().Contains("DECAL"))
+                //    //{
+                //    //    boolParameter += 10;
+                //    //}
+                //    // UseParameterMap 
+                //    if (Textures.HasParameterMap)
+                //    {
+                //        boolParameter += 10000000000000000;
+                //    }
+                //    // UseNormalMap
+                //    if (Textures.HasNormalMap)
+                //    {
+                //        boolParameter += 100000000000000000;
+                //    }
+
+                //    BoolParamTransfer = Convert.ToInt32(boolParameter.ToString(), 2);
+
+                //    debugcounter++;
+                //}
+            }
+        }
         internal void Write(BinaryWriter bw)
         {
             bw.Write(VertexCount);

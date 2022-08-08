@@ -1,4 +1,5 @@
-﻿using SharpGLTF.Geometry;
+﻿using Assimp;
+using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
 using SR_ImpEx.Helpers;
 using SR_ImpEx.Structures.GLTFFile;
@@ -25,7 +26,6 @@ namespace SR_ImpEx.Structures
         public float MaxW { get; private set; }
         public float MinZ { get; private set; }
         public float MinW { get; private set; }
-
         public CGeoMesh(FileWrapper file)
         {
             Magic = file.ReadInt(); // 1
@@ -96,6 +96,14 @@ namespace SR_ImpEx.Structures
                 }
             }
         }
+        public CGeoMesh(Scene model)
+        {
+            // Lets try to make the CGeo Empty but existant, as we're limited to 32.767 vertices in total. But we can extend this inside the individual meshes.
+            Magic = 1;
+            IndexCount = 0;
+            VertexCount = 0;
+        }
+
         internal int Size()
         {
             return 12 + (IndexCount * 2) + (VertexCount * 16);

@@ -1,4 +1,5 @@
-﻿using SR_ImpEx.Structures.GLTFFile;
+﻿using Assimp;
+using SR_ImpEx.Structures.GLTFFile;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,19 @@ namespace SR_ImpEx.Structures.DRSFile
                 //JointGroups[0] = new JointGroup(gltf);
             }
         }
+
+        public CDspJointMap(Scene model)
+        {
+            Version = 1; // Verify
+            JointGroupCount = !model.HasAnimations ? 0 : 1;
+
+            if (JointGroupCount > 0) // WIP
+            {
+                //JointGroups = new JointGroup[JointGroupCount];
+                //JointGroups[0] = new JointGroup(gltf);
+            }
+        }
+
         internal int Size()
         {
             int add = 0;
