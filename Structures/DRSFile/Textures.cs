@@ -141,10 +141,10 @@ namespace SR_ImpEx.Structures
                         color = Color.FromArgb((int)(RGBA.W * 255), (int)(RGBA.X * 255), (int)(RGBA.Y * 255), (int)(RGBA.Z * 255));
                     }
 
-                    Bitmap bitmap = new Bitmap(50, 50);
+                    Bitmap bitmap = new Bitmap(8, 8);
                     Graphics graphics = Graphics.FromImage(bitmap);
                     graphics.Clear(color);
-                    Texture[Counter] = new Texture($"{color.GetHashCode() + 999999}_custom_col", 0, bitmap, EmissivityMap);
+                    Texture[Counter] = new Texture(channel, $"{color.GetHashCode() + 999999}_custom_col", 0, bitmap, EmissivityMap);
                     Counter++;
                 }
             }

@@ -60,8 +60,9 @@ namespace SR_ImpEx.Structures
                     break;
             }
         }
-        public Texture(string img_name, int v, Bitmap bitmap, Bitmap emissivityMap)
+        public Texture(ChannelBuilder channel, string img_name, int v, Bitmap bitmap, Bitmap emissivityMap)
         {
+            Channel = channel;
             Name = img_name.Replace(".", "_");
             Length = Name.Length;
             Spacer = 0;
@@ -96,7 +97,7 @@ namespace SR_ImpEx.Structures
 
             if (Identifier == 1684432499 || Identifier == 1852992883 || Identifier == 1936745324 || Identifier == 1919116143)
             {
-                if (Channel != null)
+                if (Channel != null && Channel.Texture != null)
                 {
                     fileName = Exporter.Folder + "/" + Name + ".dds";
                     Image = Channel.Texture.PrimaryImage.Content.Content.ToArray();
@@ -111,6 +112,19 @@ namespace SR_ImpEx.Structures
                 {
                     MainWindow.LogMessage($"[INFO] File: {fileName} does not exist, writing to file...");
                     Bitmap bitmap = new Bitmap(new MemoryStream(Image));
+
+                    // Ensure that bitmap is bigger than 16x16 and is a power of 2
+                    if (bitmap.Width < 16 || bitmap.Height < 16)
+                    {
+                        bitmap = new Bitmap(bitmap, new Size(16, 16));
+                    }
+                    else if (!Helpers.ImageConverter.IsPowerOfTwo(bitmap.Width) || !Helpers.ImageConverter.IsPowerOfTwo(bitmap.Height))
+                    {
+                        // LogMessage that the bitmap needs to be resized and better provide a pre-sized one with better Quality and a Power of 2.
+                        MainWindow.LogMessage($"[WARN] Bitmap: {fileName} will be resized! Better provide a correct sized one with better Quality and a Power of 2. Current Size: {bitmap.Width}x{bitmap.Height}");
+
+                        bitmap = new Bitmap(bitmap, new Size(Helpers.ImageConverter.NextPowerOfTwo(bitmap.Width), Helpers.ImageConverter.NextPowerOfTwo(bitmap.Height)));
+                    }
 
                     if (Channel.Key == KnownChannel.BaseColor && EmissivityMap != null)
                     {

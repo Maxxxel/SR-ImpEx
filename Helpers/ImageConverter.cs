@@ -137,6 +137,27 @@ namespace SR_ImpEx.Helpers
 
             return temp;
         }
+        
+        internal static int NextPowerOfTwo(int width)
+        {
+            // Get the next highest power of two
+            if (width < 0)
+                throw new ArgumentOutOfRangeException("width");
+            --width;
+            width |= width >> 1;
+            width |= width >> 2;
+            width |= width >> 4;
+            width |= width >> 8;
+            width |= width >> 16;
+            return width + 1;
+        }
+
+        internal static bool IsPowerOfTwo(int width)
+        {
+            // return if width is a power of two
+            return (width & (width - 1)) == 0;
+        }
+
         public static Bitmap DropBlueChannel(Bitmap bitmap)
         {
             var imageAttr = new ImageAttributes();
